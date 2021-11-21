@@ -6,10 +6,10 @@
 <div id="app">
     <tabs :currentIndex="currentIndex" @onIndex="getCurrentIndex" >
         <tab index="1" label="国内疫情">
-            <div id="chinaMap">22222222</div>
+            <div id="chinaMap"></div>
         </tab>
         <tab index="2" label="国外疫情">
-            <p>123</p>
+            <div id="worldMap"></div>
         </tab>
     </tabs>  
 </div>
@@ -18,36 +18,103 @@
 
 <script>
 import api from "../api/index"
+
+// 处理并发网络请求
+import axios from "axios";
 export default {
     name: "Map",
     data() {
         return {
             cityMapData: [],
-                  currentIndex:1
+            currentIndex:1,
+
+            windowWidth: document.documentElement.clientWidth,  //实时屏幕宽度
+            windowHeight: document.documentElement.clientHeight,   //实时屏幕高度
         };
     },
     mounted() {
-        api.getCaseNum()
-            .then(res => {
-                console.log(res.data.data)
-                for (let i = 0; i < res.data.data.list.length; i++) {
+        var that = this;
+        // 并发网络请求
+        function getCaseNum(){
+            return axios.get("api/news/wap/fymap2020_data.d.json")
+            
+        }
+        function NocvaBroad(){
+            return axios.get("http://api.tianapi.com/ncovabroad/index?key=99a7d7eb3f723f31812ba4ccdf646da6")
+        }   
+        // 合并网络请求
+         axios.all([getCaseNum(),NocvaBroad()]).then(
+             axios.spread((getCaseNum,NocvaBroad)=>{
+             // 现在两个请求都执行完成了
+            //  处理第一个请求
+
+                console.log(getCaseNum.data.data)
+                for (let i = 0; i < getCaseNum.data.data.list.length; i++) {
                     var temp = {
-                        name: res.data.data.list[i].name,
-                        value: res.data.data.list[i].econNum,
+                        name: getCaseNum.data.data.list[i].name,
+                        value: getCaseNum.data.data.list[i].econNum,
                         itemStyle: {
                             normal: {
                                 areaColor: this.setColor(
-                                    res.data.data.list[i].econNum
+                                    getCaseNum.data.data.list[i].econNum
                                 )
                             }
                         }
                     };
                     this.cityMapData.push(temp);
                 }
+                //{name:‘俄罗斯’，value：28397.812}，
+                let worlds = [];
+                console.log(NocvaBroad)
+                for (let j = 0; j < NocvaBroad.data.newslist.length; j++) {
+                    let temp = {
+                        name: NocvaBroad.data.newslist[j].provinceName,
+                        value: NocvaBroad.data.newslist[j].currentConfirmedCount
+                    }
+                    worlds.push(temp)
+                    
+                }
                 this.$charts.chinaMap("chinaMap", this.cityMapData);
-            }).catch(res => {
-                console.log(res)
-            })
+                this.$charts.worldMap("worldMap", worlds)
+            
+
+         }))
+
+
+// 地图组件这里不能在这里渲染，避免多次渲染，因为地图请求拿到数据又会渲染一次
+// 网络请求拿疫情数据
+        // api.getCaseNum()
+        //     .then(res => {
+        //         console.log(res.data.data)
+        //         for (let i = 0; i < res.data.data.list.length; i++) {
+        //             var temp = {
+        //                 name: res.data.data.list[i].name,
+        //                 value: res.data.data.list[i].econNum,
+        //                 itemStyle: {
+        //                     normal: {
+        //                         areaColor: this.setColor(
+        //                             res.data.data.list[i].econNum
+        //                         )
+        //                     }
+        //                 }
+        //             };
+        //             this.cityMapData.push(temp);
+        //         }
+        //         this.$charts.chinaMap("chinaMap", this.cityMapData);
+        //         this.$charts.worldMap("worldMap")
+        //     }).catch(res => {
+        //         console.log(res)
+        //     }),
+            
+        // <!--把window.onresize事件挂在到mounted函数上-->
+        window.onresize = () => {
+            return (() => {
+              window.fullHeight = document.documentElement.clientHeight;
+                window.fullWidth = document.documentElement.clientWidth;
+              that.windowHeight = window.fullHeight;  // 高
+              that.windowWidth = window.fullWidth; // 宽
+            })()
+          };
     },
     methods: {
         setColor(value) {
@@ -74,17 +141,29 @@ export default {
          getCurrentIndex(index){
       this.currentIndex = index;
     }
-    }
-};
+    },
+    // <!--在watch中监听实时宽高-->
+    watch: {
+      windowHeight (val) {
+        let that = this;
+        console.log("实时屏幕高度：",val, that.windowHeight );
+      },
+      windowWidth (val) {
+        let that = this;
+        console.log("实时屏幕宽度：",val, that.windowHeight );
+      }
+
+}
+}
 </script>
 
 <style>
 #worldMap{
-    width: 100%;
+    width: 1371px;
     height: 400px; 
 }
 #chinaMap {
-    width: 100%;
+    width: var (--windowwidth);
     height: 400px;
 }
 .title {
