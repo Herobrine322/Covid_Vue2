@@ -1,7 +1,7 @@
 <template>
   <div class="info">
       <p class="title">
-          <i></i>
+          <!-- <i></i> -->
           病毒信息
       </p>
       <div class="content">

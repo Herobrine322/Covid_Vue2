@@ -4,6 +4,7 @@
     <Covid19InfoVue :infoData="infoData"/>
     <CaseNumVue :modifyTime="modifyTime" :caseNumData="caseNumData"/>
     <MapVue />
+    <Swiper />
     <div></div>
   </div>
 </template>
@@ -15,7 +16,7 @@ import Header from "../components/Header.vue"
 import Covid19InfoVue from "../components/Covid19Info.vue"
 import CaseNumVue from "../components/CaseNum.vue"
 import MapVue from "../components/Map.vue"
-import MapTab from "../components/Map-tab.vue"
+import Swiper from '../components/Swiper.vue'
 export default {
   data(){
     return {
@@ -30,10 +31,10 @@ export default {
     Covid19InfoVue,
     CaseNumVue,
     MapVue,
-    MapTab
+    Swiper,
 },
   mounted() {
-    api.getNcov({
+    api.getCaseNum({
       key: "99a7d7eb3f723f31812ba4ccdf646da6",
     }).then((res) => {
       // console.log(res)

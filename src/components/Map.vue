@@ -35,7 +35,7 @@ export default {
     mounted() {
         var that = this;
         // 并发网络请求
-        function getCaseNum(){
+        function Ncov(){
             return axios.get("api/news/wap/fymap2020_data.d.json")
             
         }
@@ -43,20 +43,19 @@ export default {
             return axios.get("http://api.tianapi.com/ncovabroad/index?key=99a7d7eb3f723f31812ba4ccdf646da6")
         }   
         // 合并网络请求
-         axios.all([getCaseNum(),NocvaBroad()]).then(
-             axios.spread((getCaseNum,NocvaBroad)=>{
+         axios.all([Ncov(),NocvaBroad()]).then(
+             axios.spread((Ncov,NocvaBroad)=>{
              // 现在两个请求都执行完成了
             //  处理第一个请求
-
-                console.log(getCaseNum.data.data)
-                for (let i = 0; i < getCaseNum.data.data.list.length; i++) {
+                console.log(Ncov.data.data)
+                for (let i = 0; i < Ncov.data.data.list.length; i++) {
                     var temp = {
-                        name: getCaseNum.data.data.list[i].name,
-                        value: getCaseNum.data.data.list[i].econNum,
+                        name: Ncov.data.data.list[i].name,
+                        value: Ncov.data.data.list[i].econNum,
                         itemStyle: {
                             normal: {
                                 areaColor: this.setColor(
-                                    getCaseNum.data.data.list[i].econNum
+                                    Ncov.data.data.list[i].econNum
                                 )
                             }
                         }
@@ -83,7 +82,7 @@ export default {
 
 // 地图组件这里不能在这里渲染，避免多次渲染，因为地图请求拿到数据又会渲染一次
 // 网络请求拿疫情数据
-        // api.getCaseNum()
+        // api.Ncov()
         //     .then(res => {
         //         console.log(res.data.data)
         //         for (let i = 0; i < res.data.data.list.length; i++) {

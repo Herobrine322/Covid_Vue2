@@ -2,22 +2,20 @@ import axios from "axios";
 
 const base = {
     baseUrl: "http://api.tianapi.com",
-    ncov: "/ncov/index",
+    casenum: "/ncov/index",
     // casenum: "/txapi/ncovcity/index",
     ncovabroad: "/ncovabroad/index"
-
-
 }
 
 const api = {
-    // 抗击疫情数据
-    getNcov(params) {
-        return axios.get(base.baseUrl + base.ncov, {
+    // 中国疫情
+    getCaseNum(params) {
+        return axios.get(base.baseUrl + base.casenum, {
             params
         })
     },
-    // 中国疫情
-    getCaseNum() {
+    // 抗击疫情数据
+    getNcov() {
         return axios.get("api/news/wap/fymap2020_data.d.json"
         )
     },

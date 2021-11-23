@@ -8,6 +8,7 @@ import "./china"
 import '../node_modules/echarts/map/js/world.js' // 引入世界地图
 import tabs from "./components/tabs"
 
+
 Vue.use(tabs)
 Vue.config.productionTip = false
 
