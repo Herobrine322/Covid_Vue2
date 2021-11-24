@@ -73,6 +73,7 @@ export default {
                     worlds.push(temp)
                     
                 }
+                console.log(worlds)
                 this.$charts.chinaMap("chinaMap", this.cityMapData);
                 this.$charts.worldMap("worldMap", worlds)
             
