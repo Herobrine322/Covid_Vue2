@@ -43,6 +43,9 @@ import "../node_modules/echarts/map/js/province/xizang"
 import "../node_modules/echarts/map/js/province/yunnan"
 import "../node_modules/echarts/map/js/province/zhejiang"
 
+// vant
+import { Cascader, Field, Popup, Button } from 'vant';
+Vue.use(Cascader).use(Field).use(Popup).use(Button);
 
 import tabs from "./components/tabs"
 Vue.use(tabs)

@@ -5,6 +5,7 @@
     <CaseNumVue :modifyTime="modifyTime" :caseNumData="caseNumData"/>
     <MapVue />
     <Swiper />
+    <SpringTravel />
     <div></div>
   </div>
 </template>
@@ -17,6 +18,7 @@ import Covid19InfoVue from "../components/Covid19Info.vue"
 import CaseNumVue from "../components/CaseNum.vue"
 import MapVue from "../components/Map.vue"
 import Swiper from '../components/Swiper.vue'
+import SpringTravel from "../components/SpringTravel.vue"
 export default {
   data(){
     return {
@@ -32,6 +34,7 @@ export default {
     CaseNumVue,
     MapVue,
     Swiper,
+    SpringTravel
 },
   mounted() {
     api.getCaseNum({
